@@ -32,3 +32,22 @@ jobs:
       - name: Run Tests
         run: |
           python -m pytest
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v1.${{ github.run_number }}
+          name: Python Release v1.${{ github.run_number }}
+          files: |
+            *.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
